@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import SimilarityCorrelationDistanceMetric
 
@@ -27,25 +29,25 @@ class CosineDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Element-wise products before summing into a dot product.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query tensor broadcast-compatible with gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery tensor matching query_array rules.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             query_array * gallery_array with broadcast shape.
         """
         self._validate_broadcast_compatible(
@@ -56,28 +58,28 @@ class CosineDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Turn dot products and L2 norms into cosine distance per batch pair.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Element-wise products in cross layout (n, m, *features).
-        query_array: np.ndarray
+        query_array: NumericArray
             Original query rows (n, *features) for norms.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Original gallery rows (m, *features) for norms.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) cosine distances.
         """
         dot = np.sum(values, axis=self._sample_value_axes(values))
@@ -88,25 +90,25 @@ class CosineDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Broadcast cross layout then reduce to cosine distances.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Shape (n, *sample_shape).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Shape (m, *sample_shape).
         **kwargs: Any
             Forwarded to _elementwise_values and _reduce_elementwise_values.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Cosine distance matrix (n, m) as float.
         """
         np.broadcast_shapes(query_array.shape[1:], gallery_array.shape[1:])

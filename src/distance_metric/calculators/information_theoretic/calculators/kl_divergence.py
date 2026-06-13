@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import InformationTheoreticDistanceMetric
 
@@ -27,20 +29,20 @@ class KLDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
         eps: float = 1e-12,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-bin KL contributions before summing.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Mass p.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Mass q.
         eps: float, optional
             Floor applied to both p and q before ratios and logs.
@@ -49,7 +51,7 @@ class KLDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Element-wise KL contributions.
         """
         self._validate_broadcast_compatible(
@@ -63,28 +65,28 @@ class KLDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Sum KL contributions across bins.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Per-bin terms in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) KL divergences.
         """
         return np.sum(values, axis=self._sample_value_axes(values))

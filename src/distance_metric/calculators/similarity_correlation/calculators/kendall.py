@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import SimilarityCorrelationDistanceMetric
 
@@ -27,25 +29,25 @@ class KendallDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Concordance sign per unordered feature pair from upper-triangular indices.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Samples with feature dimension last.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Matching gallery samples.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Values in {-1, 0, 1} indicating discordant, tie, or concordant pairs per bundle.
         """
         self._validate_broadcast_compatible(
@@ -60,28 +62,28 @@ class KendallDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Map concordance and discordance counts to a distance in (0, 1) range.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Pairwise sign indicators in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) Kendall distances.
 
         Notes:

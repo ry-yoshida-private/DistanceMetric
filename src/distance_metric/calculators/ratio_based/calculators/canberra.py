@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import RatioBasedDistanceMetric
 
@@ -27,25 +29,25 @@ class CanberraDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Normalized absolute gaps per coordinate.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch broadcast-compatible with gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch matching query_array rules.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             |q-g| / max(|q|+|g|, tiny) with broadcast shape.
         """
         self._validate_broadcast_compatible(
@@ -58,28 +60,28 @@ class CanberraDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Sum Canberra terms across features.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Per-coordinate Canberra contributions in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) Canberra distances.
         """
         return np.sum(values, axis=self._sample_value_axes(values))

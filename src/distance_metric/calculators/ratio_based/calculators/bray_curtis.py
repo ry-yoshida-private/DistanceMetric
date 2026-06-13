@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import RatioBasedDistanceMetric
 
@@ -28,25 +30,25 @@ class BrayCurtisDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Absolute coordinate-wise differences.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch matching gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch matching query_array.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             |q - g| with broadcast shape.
         """
         self._validate_broadcast_compatible(
@@ -57,28 +59,28 @@ class BrayCurtisDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Ratio of summed absolute gaps to summed magnitudes per pair.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Absolute differences in cross layout (n, m, *features).
-        query_array: np.ndarray
+        query_array: NumericArray
             Original query rows (n, *features) for absolute mass sums per row.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Original gallery rows (m, *features) for absolute mass sums per row.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) Bray–Curtis dissimilarities with epsilon in the denominator.
         """
         numerator = np.sum(values, axis=self._sample_value_axes(values))
@@ -89,25 +91,25 @@ class BrayCurtisDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Same broadcast layout as CrossElementwiseCalculatorBase._cross_array.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Shape (n, *sample_shape).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Shape (m, *sample_shape).
         **kwargs: Any
             Forwarded to _elementwise_values and _reduce_elementwise_values.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Bray–Curtis matrix of shape (n, m) as float.
 
         Notes:

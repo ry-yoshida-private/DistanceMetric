@@ -13,6 +13,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import CovarianceNormalizedDistanceMetric
 
@@ -29,29 +31,29 @@ class SEuclideanDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
-        variance: np.ndarray | None = None,
+        variance: FloatArray | None = None,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-coordinate scaled squared differences (d^2 / v).
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch; must match gallery_array for broadcasting.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch; same shape rules.
-        variance: np.ndarray, optional
+        variance: FloatArray, optional
             Per-coordinate variances. Required; must match each sample shape.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             (q - g)^2 / max(variance, tiny) with broadcast shape.
 
         Raises:
@@ -74,32 +76,32 @@ class SEuclideanDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
-        variance: np.ndarray | None = None,
+        variance: FloatArray | None = None,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Square root of the sum of scaled squared differences.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Scaled squares from _elementwise_values; cross shape (n, m, *features).
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused; variance was applied in the elementwise step.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
-        variance: np.ndarray, optional
+        variance: FloatArray, optional
             Echoed for signature compatibility; not read here.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) standardized Euclidean distances.
         """
         return np.sqrt(np.sum(values, axis=self._sample_value_axes(values)))

@@ -12,6 +12,8 @@ import numpy as np
 
 from .correlation import CorrelationDistanceCalculator
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import SimilarityCorrelationDistanceMetric
 
@@ -26,43 +28,43 @@ class SpearmanDistanceCalculator(CorrelationDistanceCalculator):
     """
 
     @staticmethod
-    def _rank_values(values: np.ndarray) -> np.ndarray:
+    def _rank_values(values: NumericArray) -> FloatArray:
         """
         Ordinal ranks for a one-dimensional vector.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             One-dimensional sample along a row.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Float ranks via argsort(argsort).
         """
         return np.argsort(np.argsort(values)).astype(float)
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Rank each row, then correlation distance on ranks.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Two-dimensional or higher; axis 1 is rank axis.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Same row layout as query_array.
         **kwargs: Any
             Forwarded.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Spearman-based distance matrix (n, m).
         """
         query_rank = np.apply_along_axis(self._rank_values, 1, query_array)

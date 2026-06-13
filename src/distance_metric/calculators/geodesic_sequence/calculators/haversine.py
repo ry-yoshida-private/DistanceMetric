@@ -13,6 +13,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import GeodesicSequenceDistanceMetric
 
@@ -28,25 +30,25 @@ class HaversineDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Haversine a term per coordinate pair (before central angle).
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Shape (..., 2) with latitude and longitude in last axis.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Same trailing layout as query_array.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Haversine of half central angle, expanded with a trailing length-1 axis.
 
         Raises:
@@ -69,23 +71,23 @@ class HaversineDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
         radius: float = 6371.0,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Convert haversine a to arc length on the sphere.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Output of _elementwise_values; last axis holds the a channel.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         radius: float, optional
             Sphere radius; default is Earth mean radius in kilometers.
@@ -94,7 +96,7 @@ class HaversineDistanceCalculator(CrossElementwiseCalculatorBase):
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Distances with the same length unit as radius.
         """
         radius = float(radius)

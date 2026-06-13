@@ -14,6 +14,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import GeodesicSequenceDistanceMetric
 
@@ -30,25 +32,25 @@ class DynamicTimeWarpingDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Optimal alignment cost for one query sequence vs one gallery sequence.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             One-dimensional sequence or shape (T, D) time series.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Same dimensional convention as query_array.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             One-element float vector holding the total DTW cost for this pair.
         """
         q = np.asarray(query_array)
@@ -71,9 +73,9 @@ class DynamicTimeWarpingDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
     ) -> float:
         """
@@ -81,11 +83,11 @@ class DynamicTimeWarpingDistanceCalculator(CrossElementwiseCalculatorBase):
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Length-one array from _elementwise_values.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
@@ -99,25 +101,25 @@ class DynamicTimeWarpingDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Fill an (n, m) matrix by running DTW for each row pair.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Batch of sequences with shape (n, *) where leading axis indexes queries.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Batch of sequences with shape (m, *) sharing trailing layout with queries.
         **kwargs: Any
             Forwarded to _elementwise_values and _reduce_elementwise_values.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m); entry (i, j) is DTW cost between query_array[i] and gallery_array[j].
 
         Notes:

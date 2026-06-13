@@ -25,6 +25,8 @@ import numpy as np
 
 from ..calculator import DistanceCalculator
 
+from ..array_types import ElementwiseValuesArray, FloatArray, NumericArray
+
 
 class CrossElementwiseCalculatorBase(DistanceCalculator):
     """
@@ -45,25 +47,25 @@ class CrossElementwiseCalculatorBase(DistanceCalculator):
     @abstractmethod
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-coordinate terms before aggregation.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query tensor broadcast-compatible with gallery_array for this call.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery tensor; shapes must follow NumPy broadcasting with query_array.
         **kwargs: Any
             Metric-specific options forwarded from pairwise, cross, or elementwise.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Terms that _reduce_elementwise_values will aggregate. In cross mode the
             caller inserts batch axes so typical shapes are (n, m, *feature_dims).
 
@@ -75,41 +77,41 @@ class CrossElementwiseCalculatorBase(DistanceCalculator):
     @abstractmethod
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: ElementwiseValuesArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray | float:
+    ) -> FloatArray | float:
         """
         Reduce broadcasted element-wise values into final distance scores.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: ElementwiseValuesArray
             Element-wise values computed on broadcasted inputs with shape
             (n, m, *sample_shape).
-        query_array: np.ndarray
+        query_array: NumericArray
             Original query batch with shape (n, *sample_shape).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Original gallery batch with shape (m, *sample_shape).
         **kwargs: Any
             Metric-specific parameters forwarded from cross.
 
         Returns:
         --------
-        np.ndarray | float
+        FloatArray | float
             Reduced distance values. Usually shape (n, m); some metrics
             (e.g. DTW) may return a scalar container for a single pair.
         """
 
     @staticmethod
-    def _sample_value_axes(values: np.ndarray) -> tuple[int, ...]:
+    def _sample_value_axes(values: ElementwiseValuesArray) -> tuple[int, ...]:
         """
         Return axes corresponding to sample dimensions in cross mode values.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: ElementwiseValuesArray
             Broadcasted element-wise values with shape (n, m, *sample_shape).
 
         Returns:
@@ -122,18 +124,18 @@ class CrossElementwiseCalculatorBase(DistanceCalculator):
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Compute cross distances with broadcasting.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch with shape (n, *sample_shape).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch with shape (m, *sample_shape).
         **kwargs: Any
             Metric-specific parameters forwarded to _elementwise_values and
@@ -141,7 +143,7 @@ class CrossElementwiseCalculatorBase(DistanceCalculator):
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Cross distance matrix of shape (n, m) with dtype float, unless a
             subclass overrides this method.
 

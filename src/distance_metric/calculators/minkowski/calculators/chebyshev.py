@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import MinkowskiDistanceMetric
 
@@ -27,25 +29,25 @@ class ChebyshevDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Absolute coordinate-wise distances before taking the max.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch broadcast-compatible with gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch with matching broadcast rules.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Absolute differences with the same broadcast shape as inputs.
         """
         self._validate_broadcast_compatible(
@@ -56,28 +58,28 @@ class ChebyshevDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Maximum over all feature axes for each query-gallery pair.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Absolute differences in cross layout starting with (n, m, ...).
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m); entry (i, j) is the Chebyshev distance between row i and row j.
         """
         return np.max(values, axis=self._sample_value_axes(values))

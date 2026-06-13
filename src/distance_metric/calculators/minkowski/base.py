@@ -17,6 +17,8 @@ import numpy as np
 
 from ..cross_elementwise import CrossElementwiseCalculatorBase
 
+from ...array_types import FloatArray, NumericArray
+
 
 class MinkowskiDistanceCalculatorBase(CrossElementwiseCalculatorBase):
     """
@@ -60,25 +62,25 @@ class MinkowskiDistanceCalculatorBase(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: object,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Powered absolute coordinate differences before reduction.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query tensor; must broadcast with gallery_array for this call.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery tensor with the same shape rules as query_array.
         **kwargs: object
             Unused for plain Lp; kept for compatibility with other calculators.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Same shape as the broadcast of query and gallery; nonnegative float
             values suitable for summing then rooting.
         """
@@ -90,28 +92,28 @@ class MinkowskiDistanceCalculatorBase(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: object,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Aggregate powered differences over feature axes into batch distances.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Output of _elementwise_values in cross layout (n, m, *feature_dims).
-        query_array: np.ndarray
+        query_array: NumericArray
             Original query batch (n, *features); unused here.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Original gallery batch (m, *features); unused here.
         **kwargs: object
             Unused for Lp.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Matrix of shape (n, m) containing Minkowski distances.
 
         Notes:

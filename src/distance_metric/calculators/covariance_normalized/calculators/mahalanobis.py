@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import CovarianceNormalizedDistanceMetric
 
@@ -28,32 +30,32 @@ class MahalanobisDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
-        vi: np.ndarray | None = None,
-        cov: np.ndarray | None = None,
+        vi: FloatArray | None = None,
+        cov: FloatArray | None = None,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Coordinate-wise differences before combining with vi.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch; must broadcast with gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch; same shape rules as query_array.
-        vi: np.ndarray, optional
+        vi: FloatArray, optional
             Passed through to reduce; not read here.
-        cov: np.ndarray, optional
+        cov: FloatArray, optional
             Passed through to reduce; not read here.
         **kwargs: Any
             Additional options for subclasses; unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             query_array minus gallery_array, same broadcast shape.
         """
         self._validate_broadcast_compatible(
@@ -64,35 +66,35 @@ class MahalanobisDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
-        vi: np.ndarray | None = None,
-        cov: np.ndarray | None = None,
+        vi: FloatArray | None = None,
+        cov: FloatArray | None = None,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Combine differences with vi and return nonnegative scalar distances per pair.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Differences in cross layout (n, m, *d); last axis is feature index.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
-        vi: np.ndarray, optional
+        vi: FloatArray, optional
             Inverse covariance matrix, shape (d, d). Preferred if known.
-        cov: np.ndarray, optional
+        cov: FloatArray, optional
             Covariance; vi is set to pinv(cov) when vi is None.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) non-negative Mahalanobis distances.
 
         Raises:

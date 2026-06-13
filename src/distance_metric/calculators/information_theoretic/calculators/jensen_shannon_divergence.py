@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import InformationTheoreticDistanceMetric
 
@@ -27,20 +29,20 @@ class JensenShannonDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
         eps: float = 1e-12,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-bin Jensen–Shannon terms before summing.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Mass p; floored with eps.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Mass q; floored with eps.
         eps: float, optional
             Small positive floor to avoid log(0).
@@ -49,7 +51,7 @@ class JensenShannonDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Per-bin divergence contributions before summing over features.
         """
         self._validate_broadcast_compatible(
@@ -64,28 +66,28 @@ class JensenShannonDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Sum divergence contributions across bins.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Per-bin JS terms in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) Jensen–Shannon divergences.
         """
         return np.sum(values, axis=self._sample_value_axes(values))

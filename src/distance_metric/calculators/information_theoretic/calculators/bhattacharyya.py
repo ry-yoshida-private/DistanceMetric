@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import InformationTheoreticDistanceMetric
 
@@ -27,25 +29,25 @@ class BhattacharyyaDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-bin overlap terms before summing and taking negative log.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Nonnegative mass; treated as p.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Nonnegative mass; treated as q.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Element-wise nonnegative overlap terms (float).
         """
         self._validate_broadcast_compatible(
@@ -56,28 +58,28 @@ class BhattacharyyaDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Sum geometric-mean terms and apply negative log.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Per-bin overlap terms in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) Bhattacharyya distance values.
         """
         coef = np.sum(values, axis=self._sample_value_axes(values))

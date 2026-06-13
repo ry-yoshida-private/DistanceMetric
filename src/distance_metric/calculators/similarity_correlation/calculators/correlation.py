@@ -12,6 +12,8 @@ import numpy as np
 
 from .cosine import CosineDistanceCalculator
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import SimilarityCorrelationDistanceMetric
 
@@ -28,25 +30,25 @@ class CorrelationDistanceCalculator(CosineDistanceCalculator):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Centered product terms (q - mean(q)) * (g - mean(g)) with global means.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query tensor matching gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery tensor matching query_array.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Centered products on the broadcast shape.
         """
         self._validate_broadcast_compatible(
@@ -59,25 +61,25 @@ class CorrelationDistanceCalculator(CosineDistanceCalculator):
 
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Per-row centering on the last axis, then cosine-distance machinery.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Batch (n, *features).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Batch (m, *features).
         **kwargs: Any
             Forwarded.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Correlation distance matrix (n, m).
         """
         np.broadcast_shapes(query_array.shape[1:], gallery_array.shape[1:])

@@ -3,22 +3,24 @@ from dataclasses import dataclass
 
 from enum import Enum
 
+from .array_types import FloatArray
+
 class DistanceResultType(Enum):
     DISTANCE = "distance"
     SIMILARITY = "similarity"
 
 @dataclass
 class DistanceResult:
-    value: np.ndarray
+    value: FloatArray
     type: DistanceResultType
 
     @property
     def min(self) -> float:
-        return np.min(self.value)
+        return float(np.min(self.value))
 
     @property
     def max(self) -> float:
-        return np.max(self.value)
+        return float(np.max(self.value))
 
     @property
     def best_score(self) -> float:

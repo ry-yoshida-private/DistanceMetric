@@ -12,6 +12,8 @@ import numpy as np
 
 from ...cross_elementwise import CrossElementwiseCalculatorBase
 
+from ....array_types import FloatArray, NumericArray
+
 if TYPE_CHECKING:
     from ..metric import TransportDistanceMetric
 
@@ -27,20 +29,20 @@ class HuberDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _elementwise_values(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         *,
         delta: float = 1.0,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Huber kernel values per coordinate.
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query batch matching gallery_array.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery batch matching query_array.
         delta: float, optional
             Threshold between quadratic and linear regions; must be positive.
@@ -49,7 +51,7 @@ class HuberDistanceCalculator(CrossElementwiseCalculatorBase):
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Per-coordinate Huber loss contributions.
 
         Raises:
@@ -69,28 +71,28 @@ class HuberDistanceCalculator(CrossElementwiseCalculatorBase):
 
     def _reduce_elementwise_values(
         self,
-        values: np.ndarray,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        values: NumericArray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Sum Huber losses over feature axes.
 
         Parameters:
         ----------
-        values: np.ndarray
+        values: NumericArray
             Per-coordinate Huber terms in cross layout.
-        query_array: np.ndarray
+        query_array: NumericArray
             Unused.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Unused.
         **kwargs: Any
             Unused.
 
         Returns:
         --------
-        np.ndarray
+        FloatArray
             Shape (n, m) total Huber distances.
         """
         return np.sum(values, axis=self._sample_value_axes(values))

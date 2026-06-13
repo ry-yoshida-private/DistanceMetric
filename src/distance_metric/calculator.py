@@ -7,6 +7,8 @@ from typing import Any, ClassVar
 
 from .result import DistanceResult, DistanceResultType
 
+from .array_types import BroadcastArray, FloatArray, NumericArray
+
 
 class DistanceCalculator(ABC):
     """
@@ -16,13 +18,13 @@ class DistanceCalculator(ABC):
 
     result_type: ClassVar[DistanceResultType] = DistanceResultType.DISTANCE
 
-    def pairwise(self, array: np.ndarray, **kwargs: Any) -> DistanceResult:
+    def pairwise(self, array: NumericArray, **kwargs: Any) -> DistanceResult:
         """
         Calculate the pairwise distance between all elements in the array.
 
         Parameters:
         ----------
-        array: np.ndarray
+        array: NumericArray
             The array to calculate the pairwise distance between with shape (n, *).
 
         Returns:
@@ -34,8 +36,8 @@ class DistanceCalculator(ABC):
 
     def cross(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
     ) -> DistanceResult:
         """
@@ -43,9 +45,9 @@ class DistanceCalculator(ABC):
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             The query array to calculate the cross distance with shape (n, *).
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             The gallery array to calculate the cross distance with shape (m, *).
 
         Returns:
@@ -58,10 +60,10 @@ class DistanceCalculator(ABC):
     @abstractmethod
     def _cross_array(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
-    ) -> np.ndarray:
+    ) -> FloatArray:
         """
         Return the raw numeric matrix (distance or similarity values).
 
@@ -69,13 +71,13 @@ class DistanceCalculator(ABC):
         the result in DistanceResult using the result_type class attribute.
         """
 
-    def _wrap(self, value: np.ndarray) -> DistanceResult:
+    def _wrap(self, value: FloatArray) -> DistanceResult:
         return DistanceResult(value=value, type=self.result_type)
 
     def elementwise(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: NumericArray,
+        gallery_array: NumericArray,
         **kwargs: Any,
     ) -> DistanceResult:
         """
@@ -83,9 +85,9 @@ class DistanceCalculator(ABC):
 
         Parameters:
         ----------
-        query_array: np.ndarray
+        query_array: NumericArray
             Query tensor for one logical pair before batching.
-        gallery_array: np.ndarray
+        gallery_array: NumericArray
             Gallery tensor for the same pair. Must be broadcast-compatible with
             query_array per NumPy rules; identical shapes are not required.
 
@@ -116,8 +118,8 @@ class DistanceCalculator(ABC):
 
     def _validate_broadcast_compatible(
         self,
-        query_array: np.ndarray,
-        gallery_array: np.ndarray,
+        query_array: BroadcastArray,
+        gallery_array: BroadcastArray,
     ) -> None:
         """
         Ensure query_array and gallery_array are NumPy broadcast-compatible.
