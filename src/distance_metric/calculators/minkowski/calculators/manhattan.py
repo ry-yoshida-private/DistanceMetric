@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..base import MinkowskiDistanceCalculatorBase
+from ..calculator import MinkowskiDistanceCalculatorBase
 
 if TYPE_CHECKING:
     from ..metric import MinkowskiDistanceMetric
@@ -46,5 +46,4 @@ class ManhattanDistanceCalculator(MinkowskiDistanceCalculatorBase):
             Always MinkowskiDistanceMetric.MANHATTAN.
         """
         from ..metric import MinkowskiDistanceMetric
-
         return MinkowskiDistanceMetric.MANHATTAN

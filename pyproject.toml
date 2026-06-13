@@ -18,6 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
+    "numba>=0.59.0",
 ]
 
 [project.optional-dependencies]
@@ -26,8 +27,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ry-yoshida-private/DistanceMetric"
-"Bug Tracker" = "https://github.com/ry-yoshida-private/DistanceMetric/issues"
+Homepage = "https://github.com/ry-yoshida-dev/DistanceMetric"
+"Bug Tracker" = "https://github.com/ry-yoshida-dev/DistanceMetric/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

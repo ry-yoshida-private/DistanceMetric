@@ -121,5 +121,4 @@ class MahalanobisDistanceCalculator(CrossElementwiseCalculatorBase):
             Always MAHALANOBIS.
         """
         from ..metric import CovarianceNormalizedDistanceMetric
-
         return CovarianceNormalizedDistanceMetric.MAHALANOBIS

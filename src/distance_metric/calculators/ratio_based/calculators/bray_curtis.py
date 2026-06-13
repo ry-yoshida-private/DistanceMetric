@@ -141,5 +141,4 @@ class BrayCurtisDistanceCalculator(CrossElementwiseCalculatorBase):
             Always BRAY_CURTIS.
         """
         from ..metric import RatioBasedDistanceMetric
-
         return RatioBasedDistanceMetric.BRAY_CURTIS

@@ -136,5 +136,4 @@ class CosineDistanceCalculator(CrossElementwiseCalculatorBase):
             Always COSINE.
         """
         from ..metric import SimilarityCorrelationDistanceMetric
-
         return SimilarityCorrelationDistanceMetric.COSINE

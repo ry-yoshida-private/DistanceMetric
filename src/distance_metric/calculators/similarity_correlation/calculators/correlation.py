@@ -98,5 +98,4 @@ class CorrelationDistanceCalculator(CosineDistanceCalculator):
             Always CORRELATION.
         """
         from ..metric import SimilarityCorrelationDistanceMetric
-
         return SimilarityCorrelationDistanceMetric.CORRELATION

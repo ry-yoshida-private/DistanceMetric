@@ -82,5 +82,4 @@ class SpearmanDistanceCalculator(CorrelationDistanceCalculator):
             Always SPEARMAN.
         """
         from ..metric import SimilarityCorrelationDistanceMetric
-
         return SimilarityCorrelationDistanceMetric.SPEARMAN

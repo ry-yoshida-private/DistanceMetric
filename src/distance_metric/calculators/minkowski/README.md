@@ -8,9 +8,9 @@ This submodule implements **Minkowski-family** distances on NumPy arrays: Lp nor
 
 | Path | Description |
 |------|-------------|
-| `base.py` | Abstract base `MinkowskiDistanceCalculatorBase`: shared Lp logic (powered differences, reduction) for most metrics in this family. |
-| `metric.py` | `MinkowskiDistanceMetric` enum: string codes and `.calculator` mapping to each concrete calculator. |
-| `calculators/` | Concrete distance calculators (one module per metric variant). Per-file summary: [`calculators/README.md`](calculators/README.md). |
+| [`calculator.py`](calculator.py) | Abstract base `MinkowskiDistanceCalculatorBase`: shared Lp logic (powered differences, reduction) for most metrics in this family. |
+| [`metric.py`](metric.py) | `MinkowskiDistanceMetric` enum: string codes and `.calculator` mapping to each concrete calculator. |
+| [`calculators/`](calculators/) | Concrete distance calculators (one module per metric variant). Per-file summary: [`calculators/README.md`](calculators/README.md). |
 
 ## Example
 

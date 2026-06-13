@@ -108,5 +108,4 @@ class HuberDistanceCalculator(CrossElementwiseCalculatorBase):
             Always HUBER_DISTANCE.
         """
         from ..metric import TransportDistanceMetric
-
         return TransportDistanceMetric.HUBER_DISTANCE

@@ -102,5 +102,4 @@ class KLDivergenceDistanceCalculator(CrossElementwiseCalculatorBase):
             Always KL_DIVERGENCE.
         """
         from ..metric import InformationTheoreticDistanceMetric
-
         return InformationTheoreticDistanceMetric.KL_DIVERGENCE

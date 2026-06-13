@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..base import MinkowskiDistanceCalculatorBase
+from ..calculator import MinkowskiDistanceCalculatorBase
 
 if TYPE_CHECKING:
     from ..metric import MinkowskiDistanceMetric
@@ -46,5 +46,4 @@ class EuclideanDistanceCalculator(MinkowskiDistanceCalculatorBase):
             Always MinkowskiDistanceMetric.EUCLIDEAN.
         """
         from ..metric import MinkowskiDistanceMetric
-
         return MinkowskiDistanceMetric.EUCLIDEAN

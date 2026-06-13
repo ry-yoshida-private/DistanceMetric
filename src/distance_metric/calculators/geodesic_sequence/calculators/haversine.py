@@ -115,5 +115,4 @@ class HaversineDistanceCalculator(CrossElementwiseCalculatorBase):
             Always HAVERSINE.
         """
         from ..metric import GeodesicSequenceDistanceMetric
-
         return GeodesicSequenceDistanceMetric.HAVERSINE

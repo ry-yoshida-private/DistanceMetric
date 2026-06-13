@@ -97,5 +97,4 @@ class WassersteinDistanceCalculator(CrossElementwiseCalculatorBase):
             Always WASSERSTEIN.
         """
         from ..metric import TransportDistanceMetric
-
         return TransportDistanceMetric.WASSERSTEIN

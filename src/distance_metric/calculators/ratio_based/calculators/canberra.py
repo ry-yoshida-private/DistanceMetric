@@ -97,5 +97,4 @@ class CanberraDistanceCalculator(CrossElementwiseCalculatorBase):
             Always CANBERRA.
         """
         from ..metric import RatioBasedDistanceMetric
-
         return RatioBasedDistanceMetric.CANBERRA

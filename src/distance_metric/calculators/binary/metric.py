@@ -49,10 +49,8 @@ class BinaryDistanceMetric(DistanceMetric, Enum):
         match self:
             case BinaryDistanceMetric.HAMMING:
                 from .calculators.hamming import HammingDistanceCalculator
-
                 return HammingDistanceCalculator()
             case BinaryDistanceMetric.JACCARD:
                 from .calculators.jaccard import JaccardDistanceCalculator
-
                 return JaccardDistanceCalculator()
         raise ValueError(f"No calculator found for metric {self}")
